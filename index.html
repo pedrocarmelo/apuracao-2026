@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="theme-color" content="#ECEEF1">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Apuração ao vivo: projeção do 2º turno 2026</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,400..800&display=swap" rel="stylesheet">
+<style>
+:root{
+  color-scheme: light;
+  --bg:#ECEEF1; --surface:#FFFFFF; --ink:#1A1E24; --muted:#5D6570; --line:#D5D9DF;
+  --flavio:#1E4C9E; --lula:#C52F38; --neutral:#E3E6EA; --ok:#1E7A4B; --warn:#B7791F; --focus:#E0A100;
+  --font:"Archivo","Helvetica Neue",Arial,sans-serif;
+  box-sizing:border-box; padding-top:env(safe-area-inset-top,0px); padding-bottom:env(safe-area-inset-bottom,0px);
+}
+*,*::before,*::after{box-sizing:inherit}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--font);line-height:1.45;font-variant-numeric:tabular-nums;-webkit-font-smoothing:antialiased}
+.wrap{max-width:980px;margin:0 auto;padding:18px 16px 40px}
+h1{margin:0;font-size:clamp(22px,3.4vw,32px);font-weight:750;font-stretch:80%;line-height:1.05}
+.sub{margin:4px 0 14px;color:var(--muted);font-size:14px}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:16px;margin-bottom:14px}
+.status{display:flex;flex-wrap:wrap;gap:6px 14px;align-items:center;font-size:13px;color:var(--muted)}
+.dot{width:9px;height:9px;border-radius:50%;background:var(--muted);display:inline-block;margin-right:6px;vertical-align:middle}
+.dot.live{background:var(--ok);box-shadow:0 0 0 0 rgba(30,122,75,.6);animation:pulse 2s infinite}
+@keyframes pulse{0%{box-shadow:0 0 0 0 rgba(30,122,75,.5)}70%{box-shadow:0 0 0 8px rgba(30,122,75,0)}100%{box-shadow:0 0 0 0 rgba(30,122,75,0)}}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+@media (max-width:720px){.grid2{grid-template-columns:1fr}}
+.lab{font-size:13px;color:var(--muted);font-weight:600;margin-bottom:4px}
+.big{font-size:clamp(40px,7vw,64px);font-weight:800;font-stretch:65%;line-height:.95;letter-spacing:-.02em}
+.f{color:var(--flavio)} .l{color:var(--lula)}
+.row{display:flex;justify-content:space-between;align-items:flex-end;gap:10px}
+.bar{position:relative;height:14px;border-radius:4px;overflow:hidden;display:flex;margin-top:10px;background:var(--neutral)}
+.bar span{display:block;height:100%;transition:width .4s}
+.half{position:absolute;left:50%;top:-3px;bottom:-3px;width:2px;background:var(--ink)}
+.proj .band{font-size:14px;color:var(--muted);margin-top:6px}
+.tier{display:inline-block;margin-top:10px;padding:6px 10px;border-radius:8px;font-size:14px;font-weight:650}
+.tier.t1{background:color-mix(in oklab,var(--flavio) 16%,transparent);color:var(--flavio)}
+.tier.t2{background:color-mix(in oklab,var(--warn) 18%,transparent);color:var(--warn)}
+.tier.t3{background:color-mix(in oklab,var(--lula) 16%,transparent);color:var(--lula)}
+.meta{font-size:13px;color:var(--muted);margin-top:8px}
+svg.chart{width:100%;height:auto;display:block}
+svg.chart text{font-family:var(--font);font-size:11px;fill:var(--muted)}
+.legend{display:flex;flex-wrap:wrap;gap:6px 16px;font-size:12px;color:var(--muted);margin-top:6px}
+.legend i{display:inline-block;width:18px;height:3px;vertical-align:middle;margin-right:6px;border-radius:2px}
+details summary{cursor:pointer;font-weight:650;font-size:15px}
+.form{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;margin-top:12px}
+@media (max-width:560px){.form{grid-template-columns:1fr 1fr}}
+.form label{font-size:13px;color:var(--muted);display:flex;flex-direction:column;gap:4px}
+input[type=number],input[type=url]{font:inherit;font-size:16px;padding:8px 10px;border:1px solid var(--line);border-radius:8px;background:var(--surface);color:var(--ink);width:100%}
+.btns{display:flex;flex-wrap:wrap;gap:8px;margin-top:12px}
+.btn{font:inherit;font-size:14px;font-weight:600;border:1px solid var(--line);background:var(--surface);color:var(--ink);padding:8px 13px;border-radius:8px;cursor:pointer}
+.btn.primary{background:var(--ink);color:var(--bg);border-color:var(--ink)}
+.btn:focus-visible,input:focus-visible,summary:focus-visible{outline:3px solid var(--focus);outline-offset:2px}
+.note{font-size:12px;color:var(--muted);line-height:1.5}
+.banner{border-radius:10px;padding:10px 12px;font-size:14px;margin-bottom:14px;background:color-mix(in oklab,var(--warn) 15%,var(--surface));border:1px solid color-mix(in oklab,var(--warn) 40%,transparent)}
+.banner[hidden]{display:none}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <h1>Apuração ao vivo: projeção do 2º turno</h1>
+  <p class="sub">Lê os arquivos públicos do TSE e desconta a vantagem que a ordem de chegada das urnas dá a Flávio, usando a curva real do 1º turno de 2026.</p>
+
+  <div class="banner" id="demo-banner" hidden>Modo demonstração: reproduzindo a apuração do 1º turno. O resultado final real, considerando só os dois, foi Flávio 51,0%.</div>
+
+  <div class="card"><div class="status" id="status"><span><span class="dot"></span>Iniciando…</span></div><div class="btns" style="margin-top:10px"><button class="btn" id="demo2">Ver demonstração com a apuração do 1º turno</button></div></div>
+
+  <div class="grid2">
+    <section class="card">
+      <div class="lab">Placar agora (só os dois)</div>
+      <div class="row">
+        <div><div class="lab">Flávio</div><div class="big f" id="now-f">–</div></div>
+        <div style="text-align:right"><div class="lab">Lula</div><div class="big l" id="now-l">–</div></div>
+      </div>
+      <div class="bar"><span id="bar-f" style="width:50%;background:var(--flavio)"></span><span id="bar-l" style="width:50%;background:var(--lula)"></span><i class="half"></i></div>
+      <div class="meta" id="now-meta">Urnas apuradas: –</div>
+    </section>
+    <section class="card proj">
+      <div class="lab">Projeção do resultado final de Flávio</div>
+      <div class="big f" id="proj">–</div>
+      <div class="band" id="proj-band">Faixa provável: –</div>
+      <div class="tier" id="tier" hidden></div>
+      <div class="meta" id="chance"></div>
+    </section>
+  </div>
+
+  <section class="card">
+    <div class="lab">A noite até aqui</div>
+    <svg class="chart" id="chart" viewBox="0 0 600 300" role="img" aria-label="Gráfico da apuração"></svg>
+    <div class="legend">
+      <span><i style="background:var(--flavio)"></i>Flávio na apuração</span>
+      <span><i style="background:var(--flavio);opacity:.35"></i>Caminho de quem termina com 52%</span>
+      <span><i style="background:var(--muted)"></i>Linha de empate (termina com 50%)</span>
+    </div>
+  </section>
+
+  <section class="card">
+    <details>
+      <summary>Digitar o placar manualmente</summary>
+      <p class="note">Use se a leitura automática do TSE não funcionar no seu navegador. Os percentuais são dos votos válidos, como aparecem na TV.</p>
+      <div class="form">
+        <label>Urnas apuradas (%)<input type="number" id="m-p" min="0" max="100" step="0.01" inputmode="decimal"></label>
+        <label>Flávio (%)<input type="number" id="m-f" min="0" max="100" step="0.01" inputmode="decimal"></label>
+        <label>Lula (%)<input type="number" id="m-l" min="0" max="100" step="0.01" inputmode="decimal"></label>
+      </div>
+      <div class="btns"><button class="btn primary" id="m-go">Registrar</button></div>
+    </details>
+  </section>
+
+  <section class="card">
+    <details>
+      <summary>Opções</summary>
+      <div class="btns">
+        <button class="btn" id="refresh">Atualizar agora</button>
+        <button class="btn" id="demo">Ver demonstração com o 1º turno</button>
+        <button class="btn" id="clear">Limpar histórico da noite</button>
+      </div>
+      <p class="note" style="margin-top:12px">Endereços consultados a cada 30 segundos (o mais adiantado vale):</p>
+      <label class="note" style="display:block">Arquivo completo<input type="url" id="u1"></label>
+      <label class="note" style="display:block;margin-top:6px">Arquivo simplificado<input type="url" id="u2"></label>
+    </details>
+  </section>
+
+  <p class="note">Como funciona: no 1º turno de 2026, a fatia de Flávio entre os dois começou bem acima do resultado final (chegou a 55,7% com 12% das urnas, contra 51,0% no fim) porque Sul, Sudeste e Centro-Oeste são apurados antes do Nordeste. A projeção subtrai essa diferença, ponto a ponto, do placar atual. A faixa provável e a chance são aproximações: o 2º turno pode ter um ritmo de chegada diferente. Fonte: arquivos públicos de resultados do TSE (eleição 6258, Presidente).</p>
+</div>
+
+<script>
+const URLS = {
+  u1: "https://resultados.tse.jus.br/oficial/ele2026/6258/dados/br/br-c0001-e006258-u.json",
+  u2: "https://resultados.tse.jus.br/oficial/ele2026/6258/dados-simplificados/br/br-c0001-e006258-r.json"
+};
+// Vantagem extra de Flávio (pontos) em cada % de urnas, medida no 1º turno de 2026
+const DRIFT=[[0,3.2],[2.2,3.17],[6,4.12],[12.1,4.67],[15.6,4.61],[27.3,4.32],[40.1,3.94],[52.9,3.45],[61.8,3.08],[74.5,2.29],[81.9,1.92],[84.6,1.72],[86.3,1.57],[89.1,1.31],[91.4,1.08],[95.1,0.71],[99,0.21],[99.5,0.12],[99.8,0.06],[100,0]];
+// Apuração real do 1º turno (urnas %, fatia de Flávio entre os dois) para a demonstração
+const DEMO=[[2.2,54.16],[6,55.13],[12.1,55.68],[15.6,55.62],[27.3,55.33],[40.1,54.96],[52.9,54.46],[61.8,54.09],[74.5,53.30],[81.9,52.93],[84.6,52.74],[86.3,52.58],[89.1,52.32],[91.4,52.09],[95.1,51.72],[99,51.23],[99.5,51.14],[99.8,51.07],[100,51.01]];
+
+const $=id=>document.getElementById(id);
+const fmt=(x,d=1)=>x.toLocaleString("pt-BR",{minimumFractionDigits:d,maximumFractionDigits:d});
+function drift(p){ for(let i=1;i<DRIFT.length;i++){ const [x1,y1]=DRIFT[i-1],[x2,y2]=DRIFT[i]; if(p<=x2) return y1+(y2-y1)*(p-x1)/(x2-x1);} return 0; }
+function band(p){ return 0.2 + 2.2*Math.pow(Math.max(0,1-p/100),1.1); }
+function phi(z){ const t=1/(1+0.2316419*Math.abs(z)), d=0.3989423*Math.exp(-z*z/2); const q=d*t*(0.3193815+t*(-0.3565638+t*(1.781478+t*(-1.821256+t*1.330274)))); return z>0?1-q:q; }
+
+let hist=[], demoTimer=null, lastSrc="", lastTime=null, failCount=0;
+try{ hist=JSON.parse(localStorage.getItem("apur2t-hist")||"[]"); }catch(e){ hist=[]; }
+function save(){ try{ localStorage.setItem("apur2t-hist",JSON.stringify(hist)); }catch(e){} }
+try{ const u=JSON.parse(localStorage.getItem("apur2t-urls")||"null"); if(u){ URLS.u1=u.u1||URLS.u1; URLS.u2=u.u2||URLS.u2; } }catch(e){}
+$("u1").value=URLS.u1; $("u2").value=URLS.u2;
+["u1","u2"].forEach(k=>$(k).addEventListener("change",()=>{ URLS[k]=$(k).value.trim(); try{localStorage.setItem("apur2t-urls",JSON.stringify(URLS));}catch(e){} poll(); }));
+
+/* ---------- leitura do TSE ---------- */
+function num(v){ if(v==null) return NaN; if(typeof v==="number") return v; const s=String(v).trim(); return s.includes(",")? parseFloat(s.replace(/\./g,"").replace(",",".")) : parseFloat(s); }
+function walk(o,fn){ if(o&&typeof o==="object"){ fn(o); for(const k in o) walk(o[k],fn); } }
+function parseTSE(j){
+  let pst=null; const cands=[];
+  walk(j,o=>{ if(o.pst!==undefined && pst===null) pst=num(o.pst); if(o.vap!==undefined && (o.nm||o.nmu||o.n!==undefined)) cands.push(o); });
+  const name=c=>String(c.nmu||c.nm||"");
+  const isF=c=>String(c.n)==="22"||/FL[AÁ]VIO/i.test(name(c));
+  const isL=c=>String(c.n)==="13"||/LULA/i.test(name(c));
+  const F=cands.find(isF), L=cands.find(isL);
+  if(pst===null||!F||!L) return null;
+  let fv=num(F.vap), lv=num(L.vap), s;
+  if(fv+lv>0) s=fv/(fv+lv)*100;
+  else { const fp=num(F.pvap), lp=num(L.pvap); if(!(fp+lp>0)) return null; s=fp/(fp+lp)*100; }
+  return {p:pst, s, fv, lv};
+}
+async function getJSON(url){
+  const r=await fetch(url,{cache:"no-store"});
+  if(r.status===404||r.status===403) return {missing:true};
+  if(!r.ok) throw new Error("HTTP "+r.status);
+  return {data:await r.json()};
+}
+async function poll(){
+  if(demoTimer) return;
+  const results=await Promise.allSettled([URLS.u1,URLS.u2].filter(Boolean).map(getJSON));
+  let best=null, missing=0, errors=0;
+  for(const r of results){
+    if(r.status==="rejected"){ errors++; continue; }
+    if(r.value.missing){ missing++; continue; }
+    const d=parseTSE(r.value.data); if(d && (!best || d.p>best.p)) best=d;
+  }
+  if(best){ failCount=0; addPoint(best.p,best.s,"TSE"); setStatus("live",`Lendo o TSE automaticamente · atualizado às ${new Date().toLocaleTimeString("pt-BR",{hour:"2-digit",minute:"2-digit",second:"2-digit"})}`); }
+  else if(missing && !errors){ setStatus("wait","Aguardando o TSE publicar o arquivo do 2º turno (a apuração começa às 17h de Brasília do dia 25). Nova tentativa a cada 30 segundos."); }
+  else { failCount++; setStatus("err",`Não consegui ler o TSE deste navegador${failCount>1?` (${failCount} tentativas)`:""}. Pode ser bloqueio de acesso entre sites. Use a entrada manual abaixo; continuo tentando a cada 30 segundos.`); }
+}
+function setStatus(kind,text){
+  $("status").innerHTML=`<span><span class="dot ${kind==="live"?"live":""}"></span>${text}</span>`;
+}
+
+/* ---------- pontos e cálculo ---------- */
+function addPoint(p,s,src,store=true){
+  if(!(p>=0&&p<=100&&s>0&&s<100)) return;
+  const last=hist[hist.length-1];
+  if(store){ if(!last||Math.abs(last.p-p)>0.001||Math.abs(last.s-s)>0.001){ hist.push({p,s,src,t:Date.now()}); hist.sort((a,b)=>a.p-b.p); save(); } }
+  render(p,s,src);
+}
+function render(p,s,src){
+  const d=drift(p), proj=s-d, b=band(p), sd=b/1.645;
+  $("now-f").textContent=fmt(s,2)+"%"; $("now-l").textContent=fmt(100-s,2)+"%";
+  $("bar-f").style.width=s+"%"; $("bar-l").style.width=(100-s)+"%";
+  $("now-meta").textContent=`Urnas apuradas: ${fmt(p,2)}% · fonte: ${src}`;
+  $("proj").textContent=fmt(proj,1)+"%";
+  $("proj-band").textContent=`Faixa provável: ${fmt(proj-b,1)}% a ${fmt(proj+b,1)}%`;
+  const tier=$("tier"); tier.hidden=false;
+  if(s>=52+d){ tier.className="tier t1"; tier.textContent="No ritmo de 52% ou mais"; }
+  else if(s>=50+d){ tier.className="tier t2"; tier.textContent="Vencendo, mas abaixo do ritmo de 52%"; }
+  else { tier.className="tier t3"; tier.textContent="Abaixo da linha de empate: Lula no caminho da virada"; }
+  const c=phi((proj-50)/sd)*100;
+  $("chance").textContent = p<10 ? "Ainda muito cedo: os primeiros 10% das urnas oscilam bastante."
+    : `Chance aproximada de vitória de Flávio: ${c>99?"> 99":c<1?"< 1":fmt(c,0)}%`;
+  drawChart();
+}
+function drawChart(){
+  const W=600,H=300,L=40,R=22,T=12,B=30, y0=48, y1=60;
+  const X=p=>L+(W-L-R)*p/100, Y=v=>T+(H-T-B)*(1-(Math.min(Math.max(v,y0),y1)-y0)/(y1-y0));
+  const pts=[]; for(let p=2;p<=100;p+=1) pts.push(p);
+  const path=off=>pts.map((p,i)=>`${i?"L":"M"}${X(p).toFixed(1)},${Y(off+drift(p)).toFixed(1)}`).join("");
+  let g="";
+  for(let v=y0; v<=y1; v+=2){ g+=`<line x1="${L}" x2="${W-R}" y1="${Y(v)}" y2="${Y(v)}" stroke="var(--line)" stroke-width="1"/><text x="${L-6}" y="${Y(v)+4}" text-anchor="end">${v}%</text>`; }
+  for(let p=0;p<=100;p+=25){ g+=`<text x="${X(p)}" y="${H-10}" text-anchor="middle">${p}%</text>`; }
+  g+=`<path d="${path(52)}" fill="none" stroke="var(--flavio)" stroke-opacity=".35" stroke-width="3"/>`;
+  g+=`<path d="${path(50)}" fill="none" stroke="var(--muted)" stroke-width="2" stroke-dasharray="5 4"/>`;
+  const src = demoTimer ? demoHist : hist;
+  if(src.length){
+    g+=`<path d="${src.map((h,i)=>`${i?"L":"M"}${X(h.p).toFixed(1)},${Y(h.s).toFixed(1)}`).join("")}" fill="none" stroke="var(--flavio)" stroke-width="2.5"/>`;
+    src.forEach(h=>{ g+=`<circle cx="${X(h.p).toFixed(1)}" cy="${Y(h.s).toFixed(1)}" r="3" fill="var(--flavio)"/>`; });
+  }
+  $("chart").innerHTML=g;
+}
+
+/* ---------- manual, demonstração e opções ---------- */
+$("m-go").onclick=()=>{
+  const p=num($("m-p").value), f=num($("m-f").value), l=num($("m-l").value);
+  if(!(p>=0&&p<=100&&f>0&&l>0)){ $("m-go").textContent="Confira os números"; setTimeout(()=>$("m-go").textContent="Registrar",1500); return; }
+  addPoint(p, f/(f+l)*100, "manual");
+};
+let demoHist=[];
+$("demo").onclick=()=>{
+  if(demoTimer){ stopDemo(); return; }
+  demoHist=[]; let i=0; $("demo-banner").hidden=false; $("demo").textContent="Parar demonstração";
+  setStatus("demo","Demonstração em andamento");
+  demoTimer=setInterval(()=>{
+    if(i>=DEMO.length){ stopDemo(true); return; }
+    const [p,s]=DEMO[i++]; demoHist.push({p,s}); render(p,s,"demonstração (1º turno)");
+  },1100);
+};
+function stopDemo(finished){
+  clearInterval(demoTimer); demoTimer=null; $("demo").textContent="Ver demonstração com o 1º turno";
+  if(!finished){ $("demo-banner").hidden=true; }
+  setTimeout(()=>{ $("demo-banner").hidden=true; if(hist.length){ const h=hist[hist.length-1]; render(h.p,h.s,h.src);} else drawChart(); poll(); }, finished?4000:0);
+}
+$("refresh").onclick=()=>poll();
+$("demo2").onclick=()=>$("demo").click();
+$("clear").onclick=()=>{ hist=[]; save(); ["now-f","now-l","proj"].forEach(k=>$(k).textContent="–"); $("tier").hidden=true; $("chance").textContent=""; drawChart(); };
+
+if(hist.length){ const h=hist[hist.length-1]; render(h.p,h.s,h.src); } else drawChart();
+poll(); setInterval(poll,30000);
+</script>
+</body>
+</html>
